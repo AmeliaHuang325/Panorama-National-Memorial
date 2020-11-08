@@ -1,257 +1,61 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>three.js css3d - panorama</title>
+		<title>ShuyangHuang - ADR assignment</title>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 		<link type="text/css" rel="stylesheet" href="Panorama/main.css">
+		<style >
+			html,body{height:100%; width:100%}
+			.mydiv{width:500px; 
+				height:300px;
+				position:absolute;
+				top:50%;
+				margin-top:-500px;
+				left:50%;
+				margin-left:-500px;
+			}
 
-		<style>
-			ul {
-			  list-style-type: none;
-			  margin: 0;
-			  padding: 0;
-			  overflow: hidden;
-			  background-color: #333;
-			}
-			
-			li {
-			  float: left;
-			}
-			
-			li a, .dropbtn {
-			  display: inline-block;
-			  color: white;
-			  text-align: center;
-			  padding: 14px 16px;
-			  text-decoration: none;
-			}
-			
-			li a:hover, .dropdown:hover .dropbtn {
-			  background-color: red;
-			}
-			
-			li.dropdown {
-			  display: inline-block;
-			}
-			
-			.dropdown-content {
-			  display: none;
-			  position: absolute;
-			  background-color: #f9f9f9;
-			  min-width: 160px;
-			  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-			  z-index: 1;
-			}
-			
-			.dropdown-content a {
-			  color: black;
-			  padding: 12px 16px;
-			  text-decoration: none;
-			  display: block;
-			  text-align: left;
-			}
-			
-			.dropdown-content a:hover {background-color: #f1f1f1;}
-			
-			.dropdown:hover .dropdown-content {
-			  display: block;
-			}
+			div.absolute {
+			position: absolute;
+			width: 50%;
+			bottom: 60px;
+			} 
+
+			div.right {
+			position: absolute;
+			width: 100%;
+			bottom: 100px;
+			right:150px;
+			text-align: right;
+			} 
+
 			</style>
-
-
 	</head>
 	<body>
-		<div id="info"><a href="https://threejs.org" target="_blank" rel="noopener">Shuyang Huang</a> - panorama demo. <a href="http://www.humus.name/index.php?page=Textures" target="_blank" rel="noopener">Assignment 1c</a>.</div>
+		
+		<div id="info"><a href="https://www.shuyanghuang.com/" target="_blank" rel="noopener">Shuyang Huang</a> - panorama demo. <a href="https://github.com/AmeliaHuang325/Panorama-National-Memorial" target="_blank" rel="noopener">Assignment 1c</a>.</div>
+		<h5 style="font-size:30px;opacity: 0.7;">National Memorial for Peace and Justice</h5>
 
-		<ul>
-			<li class="dropdown">
-			  <a href="javascript:void(0)" class="dropbtn">Different Views</a>
-			  <div class="dropdown-content">
-				<a href="index.html">View 1</a>
-				<a href="Scene 2.html">View 2</a>
-				<a href="Scene 3.html">View 3</a>
-			  </div>
-			</li>
-		  </ul>
+		<div class="absolute" style="opacity: 0.7;"><strong>Introduction</strong><br>
+			The National Memorial for Peace and Justice sits on six acres of <br>
+			land in Montgomery, Alabama, and is the first national memorial <br>
+			dedicated to the victims of lynching in the United States. In the <br>
+			memorial are thousands of monuments on which the designers engrave <br>
+			the victim’s names and dates of lynching. 
+		</div>
 
-		  
-		<script type="module">
+		<div class="right" style="font-size:20px;"><strong>------ START ------</strong><br><br>
+			<a href="Scene 1.html" rel="noopener">----- SCENE 1 ----- <br></a>
+			<a href="Scene 2.html" rel="noopener">----- SCENE 2 ----- <br></a>
+			<a href="Scene 3.html" rel="noopener">----- SCENE 3 ----- <br></a>
 
-			import * as THREE from './build/three.module.js';
-
-			import { CSS3DRenderer, CSS3DObject } from './Panorama/jsm/renderers/CSS3DRenderer.js';
-
-			let camera, scene, renderer;
-			const target = new THREE.Vector3();
-
-			let lon = 90, lat = 0;
-			let phi = 0, theta = 0;
-
-			let pointerX, pointerY;
-
-			init();
-			animate();
-
-			function init() {
-
-				camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-
-				scene = new THREE.Scene();
-
-				//create an AudioListener and add it to the camera
-				const listener = new THREE.AudioListener();
-				camera.add( listener );
-
-				// create a global audio source
-				const sound = new THREE.Audio( listener );
-
-				// load a sound and set it as the Audio object's buffer
-				const audioLoader = new THREE.AudioLoader();
-				audioLoader.load( 'Panorama/sounds/Track-MourningMorning.mp3', function( buffer ) {
-					sound.setBuffer( buffer );
-					sound.setLoop( true );
-					sound.setVolume( 0.5 );
-					sound.play();
-				});
-				
-				//
-
-				const sides = [
-					{
-						url: 'Panorama/textures/cube/Bridge2/px-1.png',
-						position: [ - 512, 0, 0 ],
-						rotation: [ 0, Math.PI / 2, 0 ]
-					},
-					{
-						url: 'Panorama/textures/cube/Bridge2/nx-1.png',
-						position: [ 512, 0, 0 ],
-						rotation: [ 0, - Math.PI / 2, 0 ]
-					},
-					{
-						url: 'Panorama/textures/cube/Bridge2/py-1.png',
-						position: [ 0, 512, 0 ],
-						rotation: [ Math.PI / 2, 0, Math.PI ]
-					},
-					{
-						url: 'Panorama/textures/cube/Bridge2/ny-1.png',
-						position: [ 0, - 512, 0 ],
-						rotation: [ - Math.PI / 2, 0, Math.PI ]
-					},
-					{
-						url: 'Panorama/textures/cube/Bridge2/pz-1.png',
-						position: [ 0, 0, 512 ],
-						rotation: [ 0, Math.PI, 0 ]
-					},
-					{
-						url: 'Panorama/textures/cube/Bridge2/nz-1.png',
-						position: [ 0, 0, - 512 ],
-						rotation: [ 0, 0, 0 ]
-					}
-				];
-
-				for ( let i = 0; i < sides.length; i ++ ) {
-
-					const side = sides[ i ];
-
-					const element = document.createElement( 'img' );
-					element.draggable = false;
-					element.width = 1026; // 2 pixels extra to close the gap.
-					element.src = side.url;
-
-					const object = new CSS3DObject( element );
-					object.position.fromArray( side.position );
-					object.rotation.fromArray( side.rotation );
-					scene.add( object );
-
-				}
-
-				renderer = new CSS3DRenderer();
-				renderer.setSize( window.innerWidth, window.innerHeight );
-				document.body.appendChild( renderer.domElement );
-
-				//
-
-				document.body.style.touchAction = 'none';
-				document.body.addEventListener( 'pointerdown', onPointerDown, false );
-
-				document.addEventListener( 'wheel', onDocumentMouseWheel, false );
-
-				window.addEventListener( 'resize', onWindowResize, false );
-
-			}
-
-			function onWindowResize() {
-
-				camera.aspect = window.innerWidth / window.innerHeight;
-				camera.updateProjectionMatrix();
-
-				renderer.setSize( window.innerWidth, window.innerHeight );
-
-			}
-
-			function onPointerDown( event ) {
-
-				if ( event.isPrimary === false ) return;
-
-				pointerX = event.clientX;
-				pointerY = event.clientY;
-
-				document.addEventListener( 'pointermove', onPointerMove, false );
-				document.addEventListener( 'pointerup', onPointerUp, false );
-
-			}
-
-			function onPointerMove( event ) {
-
-				if ( event.isPrimary === false ) return;
-
-				lon -= ( event.clientX - pointerX ) * 0.1;
-				lat += ( event.clientY - pointerY ) * 0.1;
-
-				pointerX = event.clientX;
-				pointerY = event.clientY;
-
-			}
-
-			function onPointerUp() {
-
-				if ( event.isPrimary === false ) return;
-
-				document.removeEventListener( 'pointermove', onPointerMove );
-				document.removeEventListener( 'pointerup', onPointerUp );
-
-			}
-
-			function onDocumentMouseWheel( event ) {
-
-				const fov = camera.fov + event.deltaY * 0.05;
-
-				camera.fov = THREE.MathUtils.clamp( fov, 10, 75 );
-
-				camera.updateProjectionMatrix();
-
-			}
-
-			function animate() {
-
-				requestAnimationFrame( animate );
-
-				lon += 0.1;
-				lat = Math.max( - 85, Math.min( 85, lat ) );
-				phi = THREE.MathUtils.degToRad( 90 - lat );
-				theta = THREE.MathUtils.degToRad( lon );
-
-				target.x = Math.sin( phi ) * Math.cos( theta );
-				target.y = Math.cos( phi );
-				target.z = Math.sin( phi ) * Math.sin( theta );
-
-				camera.lookAt( target );
-
-				renderer.render( scene, camera );
-
-			}
-
-		</script>
+			
+		</div>
+			
+		
+		<div class = "mydiv">
+			<image src = "Panorama/textures/AXON PLAN.png" width = "1000" height = "1000" style = "opacity: 0.8;">
+		</div>
 	</body>
 </html>
